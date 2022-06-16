@@ -8,14 +8,6 @@ on:
 env:
   config_dir: ./.github/workflows/configs
 jobs:
-  build: # make sure build/ci work properly
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: |
-          npm install
-      - run: |
-          npm run all
   get-matrix:
     runs-on: ubuntu-latest
     outputs:
