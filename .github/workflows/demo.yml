@@ -1,19 +1,21 @@
 name: Swap Slots
-
 on:
   workflow_dispatch:
   # pull_request:
   #   types: [opened, closed]
   #   branches:
   #     - main
-
 env:
-  root_dir: swap-deployment-slot
-  # Load Matrix from JSON
   config_dir: ./.github/workflows/configs
-  config_json_script: ./swap-deployment-slot/example.js
-
 jobs:
+  build: # make sure build/ci work properly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          npm install
+      - run: |
+          npm run all
   get-matrix:
     runs-on: ubuntu-latest
     outputs:
@@ -23,85 +25,21 @@ jobs:
     - name: Export deployment matrix
       id: get-matrix
       run: |
-        npm install --only=prod
-        node ${{ env.config_json_script }} deployment-matrix
+        node ./index.js test-get-deploy-slots.json
       working-directory: ${{ env.config_dir }}
 
-  get-slot-settings:
-    if: github.event_name == 'workflow_dispatch'
-    needs: [ get-matrix ]
+  test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJson(needs.get-matrix.outputs.result).app_service }}
-    steps:
-      - name: get-slot-settings
-        uses: mildronize/actions-az-webapp-swap@v1
-        with: 
-          mode: get-slot-settings
-          app-name: ${{ matrix.app_name }}
-          resource-group: ${{ matrix.resource_group }}
-          source-slot: ${{ matrix.source_slot }}
-          target-slot: ${{ matrix.target_slot }}
-          output-file: ${{ env.root_dir }}/${{ matrix.resource_group }}/${{ matrix.app_name }}.appsettings.json
-          azure_credentials: ${{ secrets.azure_credentials }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-  set-slot-settings:
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     needs: [ get-matrix ]
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJson(needs.get-matrix.outputs.result).app_service }}
     steps:
-      - name: set-slot-settings
-        uses: mildronize/actions-az-webapp-swap@v1
-        with: 
-          mode: set-slot-settings
-          app-name: ${{ matrix.app_name }}
-          resource-group: ${{ matrix.resource_group }}
-          source-slot: ${{ matrix.source_slot }}
-          target-slot: ${{ matrix.target_slot }}
-          output-file: ${{ env.root_dir }}/${{ matrix.resource_group }}/${{ matrix.app_name }}.appsettings.json
-          azure_credentials: ${{ secrets.azure_credentials }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-  swap-slots:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    needs: [ get-matrix ]
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJson(needs.get-matrix.outputs.result).app_service }}
-    steps:
-      - name: swap-slots
-        uses: mildronize/actions-az-webapp-swap@v1
-        with: 
-          mode: swap-slots
-          app-name: ${{ matrix.app_name }}
-          resource-group: ${{ matrix.resource_group }}
-          source-slot: ${{ matrix.source_slot }}
-          target-slot: ${{ matrix.target_slot }}
-          output-file: ${{ env.root_dir }}/${{ matrix.resource_group }}/${{ matrix.app_name }}.appsettings.json
-          azure_credentials: ${{ secrets.azure_credentials }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Get App Settings
-      #   run: |
-      #     az webapp config appsettings list \
-      #     --name ${{ matrix.app_name }} \
-      #     --resource-group ${{ matrix.resource_group }} \
-      #     --slot ${{ matrix.slot }} \
-      #     > ${{ matrix.app_name }}.appsettings.json
-      # - name: Get Connection String
-      #   run: |
-      #     az webapp config connection-string list \
-      #     --name wrmstormhotfixscs \
-      #     --resource-group rg-storm-hotfix-scs \
-      #     > ${{ matrix.app_name }}.connection-string.json
-      
-  
+      - uses: actions/checkout@v2
+      # SP: github action az webapp swap
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.azure_credentials }}
+      - uses: ./
+        with:
+          mode: get-deploy-slots
+          config: ${{ needs.get-matrix.outputs.result }}
+          token: ${{ secrets.PAT }}
+          repo: mildronize/actions-az-webapp-swap
