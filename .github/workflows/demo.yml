@@ -37,7 +37,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.azure_credentials }}
-      - uses: ./
+      - uses: mildronize/actions-az-webapp-swap@v0.0.1
         with:
           mode: get-deploy-slots
           config: ${{ needs.get-matrix.outputs.result }}
