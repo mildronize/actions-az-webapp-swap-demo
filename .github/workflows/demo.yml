@@ -40,7 +40,7 @@ jobs:
   set-slot-settings:
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
     name: ${{ format('⚙️ Set Slot | {0} - {1}', matrix.name, matrix.slot) }}
-    needs: [ get-matrix, get-slot-settings ]
+    needs: [ get-matrix  ]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -62,7 +62,7 @@ jobs:
   swap-slot:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     name: ${{ format('🚀 Swap Slot | {0} - {1}', matrix.name, matrix.slot) }}
-    needs: [ get-matrix, set-slot-settings ]
+    needs: [ get-matrixv ]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
