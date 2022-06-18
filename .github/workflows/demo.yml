@@ -62,7 +62,7 @@ jobs:
   swap-slot:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     name: ${{ format('🚀 Swap Slot | {0} - {1}', matrix.name, matrix.slot) }}
-    needs: [ get-matrixv ]
+    needs: [ get-matrix ]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
