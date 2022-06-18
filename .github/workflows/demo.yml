@@ -30,7 +30,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.azure_credentials }}
-      - uses: mildronize/actions-az-webapp-swap@v0.0.5
+      - uses: mildronize/actions-az-webapp-swap@v0.0.6
         with:
           mode: get-deploy-slots
           config: ${{ needs.get-matrix.outputs.result }}
@@ -54,7 +54,7 @@ jobs:
           creds: ${{ secrets.azure_credentials }}
       
       - name: set-slot-settings
-        uses: mildronize/actions-az-webapp-swap@v0.0.5
+        uses: mildronize/actions-az-webapp-swap@v0.0.6
         with: 
           mode: set-deploy-slots
           swap-config: ${{ toJson(matrix) }}
@@ -76,23 +76,7 @@ jobs:
           creds: ${{ secrets.azure_credentials }}
       
       - name: set-slot-settings
-        uses: mildronize/actions-az-webapp-swap@v0.0.5
+        uses: mildronize/actions-az-webapp-swap@v0.0.6
         with: 
           mode: swap-slots
           swap-config: ${{ toJson(matrix) }}
-
-  # test: # make sure the action works on a clean machine without building
-  #   runs-on: ubuntu-latest
-  #   needs: [ get-matrix ]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     # SP: github action az webapp swap
-  #     - uses: azure/login@v1
-  #       with:
-  #         creds: ${{ secrets.azure_credentials }}
-  #     - uses: mildronize/actions-az-webapp-swap@v0.0.5
-  #       with:
-  #         mode: get-deploy-slots
-  #         config: ${{ needs.get-matrix.outputs.result }}
-  #         token: ${{ secrets.PAT }}
-  #         repo: mildronize/actions-az-webapp-swap-demo
