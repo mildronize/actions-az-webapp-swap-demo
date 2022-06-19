@@ -1,12 +1,12 @@
 [
   {
     "name": "data1",
-    "slotSetting": false,
+    "slotSetting": true,
     "value": "value12"
   },
   {
     "name": "data2",
-    "slotSetting": false,
+    "slotSetting": true,
     "value": "value22"
   }
 ]
