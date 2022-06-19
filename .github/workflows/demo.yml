@@ -30,7 +30,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.azure_credentials }}
-      - uses: mildronize/actions-az-webapp-swap@v0.0.8
+      - uses: mildronize/actions-az-webapp-swap@v0.0.9
         with:
           mode: get-deploy-slots
           config: ${{ needs.get-matrix.outputs.result }}
@@ -54,7 +54,7 @@ jobs:
           creds: ${{ secrets.azure_credentials }}
       
       - name: set-slot-settings
-        uses: mildronize/actions-az-webapp-swap@v0.0.8
+        uses: mildronize/actions-az-webapp-swap@v0.0.9
         with: 
           mode: set-deploy-slots
           swap-config: ${{ toJson(matrix) }}
@@ -76,7 +76,7 @@ jobs:
           creds: ${{ secrets.azure_credentials }}
       
       - name: set-slot-settings
-        uses: mildronize/actions-az-webapp-swap@v0.0.8
+        uses: mildronize/actions-az-webapp-swap@v0.0.9
         with: 
           mode: swap-slots
           swap-config: ${{ toJson(matrix) }}
