@@ -1,0 +1,12 @@
+[
+  {
+    "name": "data1",
+    "slotSetting": false,
+    "value": "value10"
+  },
+  {
+    "name": "data2",
+    "slotSetting": false,
+    "value": "value20"
+  }
+]
