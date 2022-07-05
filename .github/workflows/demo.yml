@@ -25,7 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ get-matrix ]
     steps:
-      - uses: actions/checkout@v2
       # SP: github action az webapp swap
       - uses: azure/login@v1
         with:
@@ -38,7 +37,9 @@ jobs:
           repo: mildronize/actions-az-webapp-swap-demo
           
   set-slot-settings:
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    if: >- 
+      github.event_name == 'pull_request' &&
+      github.event.action != 'closed'
     name: ${{ format('⚙️ Set Slot | {0} - {1}', matrix.name, matrix.slot) }}
     needs: [ get-matrix  ]
     runs-on: ubuntu-latest
@@ -47,7 +48,6 @@ jobs:
       matrix:
         include: ${{ fromJson(needs.get-matrix.outputs.result) }}
     steps:
-      - uses: actions/checkout@v2
       # SP: github action az webapp swap
       - uses: azure/login@v1
         with:
@@ -60,7 +60,10 @@ jobs:
           swap-config: ${{ toJson(matrix) }}
 
   swap-slot:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    if: >- 
+      github.event_name == 'pull_request' &&
+      github.event.action == 'closed' && 
+      github.event.pull_request.merged == true
     name: ${{ format('🚀 Swap Slot | {0} - {1}', matrix.name, matrix.slot) }}
     needs: [ get-matrix ]
     runs-on: ubuntu-latest
@@ -69,7 +72,6 @@ jobs:
       matrix:
         include: ${{ fromJson(needs.get-matrix.outputs.result) }}
     steps:
-      - uses: actions/checkout@v2
       # SP: github action az webapp swap
       - uses: azure/login@v1
         with:
@@ -86,10 +88,25 @@ jobs:
     needs: [ swap-slot ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: clean
         uses: mildronize/actions-az-webapp-swap@main
         with: 
           mode: clean
           token: ${{ secrets.PAT }}
           repo: mildronize/actions-az-webapp-swap-demo
+
+  close:
+    if: >- 
+      github.event_name == 'pull_request' &&
+      github.event.action == 'closed' && 
+      github.event.pull_request.merged == false
+    name: close PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: clean
+        uses: mildronize/actions-az-webapp-swap@main
+        with: 
+          mode: clean
+          token: ${{ secrets.PAT }}
+          repo: mildronize/actions-az-webapp-swap-demo
+  
