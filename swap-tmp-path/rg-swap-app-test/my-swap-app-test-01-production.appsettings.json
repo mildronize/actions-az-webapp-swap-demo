@@ -1,0 +1,17 @@
+[
+  {
+    "name": "data1",
+    "slotSetting": true,
+    "value": "value1"
+  },
+  {
+    "name": "data2",
+    "slotSetting": false,
+    "value": "value2"
+  },
+  {
+    "name": "data3",
+    "slotSetting": false,
+    "value": "LcynichY/m18iS6bPp/MgRhYv6i7R3VZtuoqOtnRl4wZYMaauVJN6y5n6BZ/NfQG1WtJKes0mKGbgeY3+56JAg=="
+  }
+]
