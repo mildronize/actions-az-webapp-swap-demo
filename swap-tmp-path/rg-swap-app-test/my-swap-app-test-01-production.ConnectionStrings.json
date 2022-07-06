@@ -1,8 +1,7 @@
 [
   {
     "name": "data4",
-    "slotSetting": false,
-    "type": "MySql",
+    "slotSetting": true,
     "value": "hTwKlten4CcECqT5RDFqbLyFrokvCzzhyu9biDUevY22fp4J6GdANEPMAu+Col5fv3tEoZqprAuBSpOtd0213g=="
   }
 ]
