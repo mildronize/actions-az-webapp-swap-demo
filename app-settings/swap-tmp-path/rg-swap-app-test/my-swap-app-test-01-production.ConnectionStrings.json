@@ -1,0 +1,14 @@
+[
+  {
+    "name": "data4",
+    "slotSetting": true,
+    "type": "MySql",
+    "value": "value4"
+  },
+  {
+    "name": "key1",
+    "slotSetting": true,
+    "type": "MySql",
+    "value": "value1"
+  }
+]
