@@ -1,7 +1,7 @@
 [
   {
     "name": "data1",
-    "slotSetting": false,
+    "slotSetting": true,
     "value": "value1"
   },
   {
